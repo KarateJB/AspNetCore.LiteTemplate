@@ -1,7 +1,8 @@
 using application.Features.Members.Commands;
 using application.Features.Members.Queries;
 using AutoMapper;
-using domain.Models;
+using domain.Entities;
+using domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
@@ -22,20 +23,20 @@ public class MembersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateMemberRequest request)
+    public async Task<IActionResult> Create(CreateMemberRequest request, CancellationToken cancellationToken)
     {
-        var member = _mapper.Map<MemberDataModel>(request);
-        var id = await _mediator.Send(new CreateMemberCommand(member));
+        var member = _mapper.Map<Member>(request);
+        var id = await _mediator.Send(new CreateMemberCommand(member), cancellationToken);
         return CreatedAtAction(nameof(Find), new { id }, new { id });
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, UpdateMemberRequest request)
+    public async Task<IActionResult> Update(Guid id, UpdateMemberRequest request, CancellationToken cancellationToken)
     {
-        var member = _mapper.Map<MemberDataModel>(request);
-        member.Id = id;
+        var member = _mapper.Map<Member>(request);
+        member.Id = MemberId.From(id);
 
-        var updated = await _mediator.Send(new UpdateMemberCommand(member));
+        var updated = await _mediator.Send(new UpdateMemberCommand(member), cancellationToken);
         if (!updated)
         {
             return NotFound();
@@ -45,9 +46,9 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<MemberResponse>> Find(Guid id)
+    public async Task<ActionResult<MemberResponse>> Find(Guid id, CancellationToken cancellationToken)
     {
-        var member = await _mediator.Send(new FindMemberQuery(id));
+        var member = await _mediator.Send(new FindMemberQuery(id), cancellationToken);
         if (member is null)
         {
             return NotFound();
@@ -58,9 +59,9 @@ public class MembersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var deleted = await _mediator.Send(new DeleteMemberCommand(id));
+        var deleted = await _mediator.Send(new DeleteMemberCommand(id), cancellationToken);
         if (!deleted)
         {
             return NotFound();

@@ -1,5 +1,5 @@
 using application.Interfaces;
-using domain.Models;
+using domain.Entities;
 
 namespace application.Services;
 
@@ -12,15 +12,15 @@ public class MemberService : IMemberService
         _memberRepository = memberRepository;
     }
 
-    public async Task<Guid> CreateAsync(MemberDataModel member, CancellationToken cancellationToken = default)
+    public async Task<Guid> CreateAsync(Member member, CancellationToken cancellationToken = default)
     {
         member.RegisterOn = member.RegisterOn == default ? DateTimeOffset.UtcNow : member.RegisterOn;
         return await _memberRepository.CreateAsync(member, cancellationToken);
     }
 
-    public async Task<bool> UpdateAsync(MemberDataModel member, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateAsync(Member member, CancellationToken cancellationToken = default)
     {
-        var existingMember = await _memberRepository.FindAsync(member.Id, cancellationToken);
+        var existingMember = await _memberRepository.FindAsync(member.Id.Value, cancellationToken);
         if (existingMember is null)
         {
             return false;
@@ -30,7 +30,7 @@ public class MemberService : IMemberService
         return await _memberRepository.UpdateAsync(member, cancellationToken);
     }
 
-    public Task<MemberDataModel?> FindAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<Member?> FindAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return _memberRepository.FindAsync(id, cancellationToken);
     }

@@ -1,16 +1,18 @@
-namespace domain.Models;
+using domain.ValueObjects;
 
-public class MemberDataModel
+namespace domain.Entities;
+
+public class Member
 {
-    public Guid Id { get; set; }
+    public MemberId? Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
 
     public DateTimeOffset Birthday { get; set; }
 
-    public string Address { get; set; } = string.Empty;
+    public Address? Address { get; set; }
 
-    public string Phone { get; set; } = string.Empty;
+    public Phone? Phone { get; set; }
 
     public DateTimeOffset RegisterOn { get; set; }
 

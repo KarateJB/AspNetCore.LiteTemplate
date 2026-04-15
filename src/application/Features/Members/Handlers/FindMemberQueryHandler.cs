@@ -1,11 +1,11 @@
 using application.Features.Members.Queries;
 using application.Interfaces;
-using domain.Models;
+using domain.Entities;
 using MediatR;
 
 namespace application.Features.Members.Handlers;
 
-public class FindMemberQueryHandler : IRequestHandler<FindMemberQuery, MemberDataModel?>
+public class FindMemberQueryHandler : IRequestHandler<FindMemberQuery, Member?>
 {
     private readonly IMemberService _memberService;
 
@@ -14,7 +14,7 @@ public class FindMemberQueryHandler : IRequestHandler<FindMemberQuery, MemberDat
         _memberService = memberService;
     }
 
-    public Task<MemberDataModel?> Handle(FindMemberQuery request, CancellationToken cancellationToken)
+    public Task<Member?> Handle(FindMemberQuery request, CancellationToken cancellationToken)
     {
         return _memberService.FindAsync(request.Id, cancellationToken);
     }
