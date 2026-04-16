@@ -12,7 +12,7 @@ build:
 test:
 		dotnet test ./tests/app.test/app.test.csproj --no-build /clp:ErrorsOnly
 
-run_webapi: build
+run: build
 		dotnet run --project ./webapi/webapi.csproj --launch-profile "Dev" --property:Configuration=Debug
 
 publish:

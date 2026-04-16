@@ -3,8 +3,8 @@ using application.Interfaces;
 using Dapper;
 using domain.Entities;
 using domain.ValueObjects;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace infrastructure.Repositories;
 
@@ -23,9 +23,9 @@ public class MemberRepository : IMemberRepository
         var memberData = MapMemberToData(member);
         
         const string sql = @"
-INSERT INTO Members (Id, Name, Birthday, Address, Phone, RegisterOn, IsEnabled)
-OUTPUT INSERTED.Id
-VALUES (@Id, @Name, @Birthday, @Address, @Phone, @RegisterOn, @IsEnabled);";
+    INSERT INTO ""Members"" (""Id"", ""Name"", ""Birthday"", ""Address"", ""Phone"", ""RegisterOn"", ""IsEnabled"")
+    VALUES (@Id, @Name, @Birthday, @Address, @Phone, @RegisterOn, @IsEnabled)
+    RETURNING ""Id"";";
 
         using var connection = CreateConnection();
         return await connection.ExecuteScalarAsync<Guid>(new CommandDefinition(sql, memberData, cancellationToken: cancellationToken));
@@ -36,14 +36,14 @@ VALUES (@Id, @Name, @Birthday, @Address, @Phone, @RegisterOn, @IsEnabled);";
         var memberData = MapMemberToData(member);
         
         const string sql = @"
-UPDATE Members
-SET Name = @Name,
-    Birthday = @Birthday,
-    Address = @Address,
-    Phone = @Phone,
-    RegisterOn = @RegisterOn,
-    IsEnabled = @IsEnabled
-WHERE Id = @Id;";
+UPDATE ""Members""
+SET ""Name"" = @Name,
+    ""Birthday"" = @Birthday,
+    ""Address"" = @Address,
+    ""Phone"" = @Phone,
+    ""RegisterOn"" = @RegisterOn,
+    ""IsEnabled"" = @IsEnabled
+WHERE ""Id"" = @Id;";
 
         using var connection = CreateConnection();
         var affectedRows = await connection.ExecuteAsync(new CommandDefinition(sql, memberData, cancellationToken: cancellationToken));
@@ -53,9 +53,9 @@ WHERE Id = @Id;";
     public async Task<Member?> FindAsync(Guid id, CancellationToken cancellationToken = default)
     {
         const string sql = @"
-SELECT Id, Name, Birthday, Address, Phone, RegisterOn, IsEnabled
-FROM Members
-WHERE Id = @Id;";
+SELECT ""Id"", ""Name"", ""Birthday"", ""Address"", ""Phone"", ""RegisterOn"", ""IsEnabled""
+FROM ""Members""
+WHERE ""Id"" = @Id;";
 
         using var connection = CreateConnection();
         var memberData = await connection.QuerySingleOrDefaultAsync<MemberDataModel>(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
@@ -65,15 +65,15 @@ WHERE Id = @Id;";
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         const string sql = @"
-DELETE FROM Members
-WHERE Id = @Id;";
+DELETE FROM ""Members""
+WHERE ""Id"" = @Id;";
 
         using var connection = CreateConnection();
         var affectedRows = await connection.ExecuteAsync(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
         return affectedRows > 0;
     }
 
-    private IDbConnection CreateConnection() => new SqlConnection(_connectionString);
+    private IDbConnection CreateConnection() => new NpgsqlConnection(_connectionString);
 
     private static MemberDataModel MapMemberToData(Member member)
     {
