@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>KarateJB.AspNetCore.LiteTemplate</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>ASP.NET Core Lite Template</Title>
+    <Authors>KarateJB</Authors>
+    <Description>ASP.NET Core Web API lite template with layered architecture.</Description>
+    <PackageTags>dotnet-new;template;aspnetcore;clean-architecture</PackageTags>
+    <PackageType>Template</PackageType>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\src\**\*"
+             Exclude="..\src\**\bin\**;..\src\**\obj\**"
+             Pack="true"
+             PackagePath="content" />
+  </ItemGroup>
+</Project>
