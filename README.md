@@ -1,79 +1,30 @@
 # asp.net core Lite Template
 
+Template identity details:
+- Identity: `KarateJB.AspNetCore.LiteTemplate.CSharp`
+- Short name: `aspnetcore-lite`
+
+
 ---
 ## Architecture
 
-WebAPI (Presentation) 
+```
+WebAPI (Presentation)
   ↓ (depends on)
 Application (Contracts: IMemberRepository, IMemberService)
   ↓ (depends on)
 Infrastructure (Implementations: MemberRepository)
   ↓ (depends on)
 Domain (business entities, value objects, and domain logic)
+```
+
 
 ---
-## Sample
+## Demo
 
-## Members API
+### Prerequisite
 
-Base URL: `https://localhost:5001`
-
-Replace `YOUR_MEMBER_ID` with an actual member ID when calling the `GET`, `PUT`, and `DELETE` endpoints.
-
-### Create member
-
-```bash
-curl -X POST 'https://localhost:5001/api/Members' -k --include \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq ""
-```
-
-To export the Memeber ID from the response:
-```bash
-export MEMBER_ID=$(curl -X POST 'https://localhost:5001/api/Members' -k --include \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq -r ".id")
-```
-
-### Update member
-
-```bash
-curl -X PUT "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"456 Oak Ave","phone":"555-0101","isEnabled":true}'
-```
-
-### Find member
-
-```bash
-curl "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
-```
-
-### Delete member
-
-```bash
-curl -X DELETE "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
-```
-
----
-
-### SQL Server
-
-```sql
-CREATE TABLE Members
-(
-    Id UNIQUEIDENTIFIER DEFAULT NEWID(),
-    Name NVARCHAR(50),
-    Birthday DATETIMEOFFSET,
-    Address NVARCHAR(100),
-    Phone VARCHAR(20),
-    RegisterOn DATETIMEOFFSET,
-    IsEnabled BIT DEFAULT 1,
-    CONSTRAINT PK_Folks PRIMARY KEY NONCLUSTERED (Id)
-)
-```
-
-### PostgreSQL
+1. Create the table in PostgresSQL database.
 
 ```sql
 CREATE TABLE "Members"
@@ -88,3 +39,54 @@ CREATE TABLE "Members"
     CONSTRAINT "PK_Folks" PRIMARY KEY ("Id")
 );
 ```
+
+2. Update the DB connection string in "appsettings.Development.json"
+
+
+
+### Default API
+
+Base URL: `https://localhost:5001`
+
+#### Create member
+
+```bash
+curl -X POST 'https://localhost:5001/api/Members' -k --include \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq ""
+```
+
+To export the Memeber ID from the response:
+
+```bash
+export MEMBER_ID=$(curl -X POST 'https://localhost:5001/api/Members' -k --include \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq -r ".id")
+```
+
+#### Update member
+
+```bash
+curl -X PUT "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"456 Oak Ave","phone":"555-0101","isEnabled":true}'
+```
+
+#### Find member
+
+```bash
+curl "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
+```
+
+#### Delete member
+
+```bash
+curl -X DELETE "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
+```
+
+---
+## Notes
+
+- This repository includes a workflow that will publish the template to nuget.org either when:
+  - Git push to `main` branch.
+  - Push tag 'v*', e.g. `git tag v1.0.0 && git push origin v1.0.0`
