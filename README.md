@@ -3,7 +3,20 @@
 Template identity details:
 - Identity: `KarateJB.AspNetCore.LiteTemplate.CSharp`
 - Short name: `aspnetcore-lite`
+- nuget package: https://www.nuget.org/packages/KarateJB.AspNetCore.LiteTemplate
 
+
+## How to use
+
+Install the dotnet template.
+```bash
+dotnet new install KarateJB.AspNetCore.LiteTemplate
+```
+
+Create a new project by
+```bash
+dotnet new aspnetcore-lite [--name myapp]
+```
 
 ---
 ## Architecture
