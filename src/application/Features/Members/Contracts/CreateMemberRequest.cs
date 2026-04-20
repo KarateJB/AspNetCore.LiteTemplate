@@ -1,9 +1,7 @@
-namespace webapi.Models;
+namespace application.Features.Members.Contracts;
 
-public class MemberResponse
+public class CreateMemberRequest
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = string.Empty;
 
     public DateTimeOffset Birthday { get; set; }
@@ -12,7 +10,5 @@ public class MemberResponse
 
     public string Phone { get; set; } = string.Empty;
 
-    public DateTimeOffset RegisterOn { get; set; }
-
-    public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; } = true;
 }

@@ -1,9 +1,9 @@
+using application.Features.Members.Contracts;
 using AutoMapper;
 using domain.Entities;
 using domain.ValueObjects;
-using webapi.Models;
 
-namespace webapi.Mapping;
+namespace application.Mapping;
 
 public class MemberApiProfile : Profile
 {

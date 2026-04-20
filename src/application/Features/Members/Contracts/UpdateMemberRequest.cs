@@ -1,6 +1,6 @@
-namespace webapi.Models;
+namespace application.Features.Members.Contracts;
 
-public class CreateMemberRequest
+public class UpdateMemberRequest
 {
     public string Name { get; set; } = string.Empty;
 
@@ -10,5 +10,5 @@ public class CreateMemberRequest
 
     public string Phone { get; set; } = string.Empty;
 
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled { get; set; }
 }

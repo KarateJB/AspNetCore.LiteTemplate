@@ -1,11 +1,11 @@
 using application.Features.Members.Commands;
+using application.Features.Members.Contracts;
 using application.Features.Members.Queries;
 using AutoMapper;
 using domain.Entities;
 using domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Models;
 
 namespace webapi.Controllers;
 
@@ -48,6 +48,17 @@ public class MembersController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MemberResponse>> Find(Guid id, CancellationToken cancellationToken)
     {
+        // mock the response body
+        return Ok(new MemberResponse
+        {
+            Id = id,
+            Name = "Test",
+            Address = "Test",
+            Phone = "Test",
+            Birthday = new DateTime(2012, 3, 13),
+            RegisterOn = DateTime.Now
+        });
+
         var member = await _mediator.Send(new FindMemberQuery(id), cancellationToken);
         if (member is null)
         {
