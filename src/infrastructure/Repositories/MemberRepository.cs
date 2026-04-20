@@ -3,8 +3,9 @@ using application.Interfaces;
 using Dapper;
 using domain.Entities;
 using domain.ValueObjects;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Npgsql;
+using shared.Configurations;
 
 namespace infrastructure.Repositories;
 
@@ -12,16 +13,22 @@ public class MemberRepository : IMemberRepository
 {
     private readonly string _connectionString;
 
-    public MemberRepository(IConfiguration configuration)
+    public MemberRepository(IOptions<AppSettings> appSettingsOptions)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection")
+        AppSettings appSettings = appSettingsOptions.Value;
+        _connectionString = appSettings.ConnectionStrings.PgConnection
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+
+        if (string.IsNullOrWhiteSpace(_connectionString))
+        {
+            throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+        }
     }
 
     public async Task<Guid> CreateAsync(Member member, CancellationToken cancellationToken = default)
     {
         var memberData = MapMemberToData(member);
-        
+
         const string sql = @"
     INSERT INTO ""Members"" (""Id"", ""Name"", ""Birthday"", ""Address"", ""Phone"", ""RegisterOn"", ""IsEnabled"")
     VALUES (@Id, @Name, @Birthday, @Address, @Phone, @RegisterOn, @IsEnabled)
@@ -34,7 +41,7 @@ public class MemberRepository : IMemberRepository
     public async Task<bool> UpdateAsync(Member member, CancellationToken cancellationToken = default)
     {
         var memberData = MapMemberToData(member);
-        
+
         const string sql = @"
 UPDATE ""Members""
 SET ""Name"" = @Name,

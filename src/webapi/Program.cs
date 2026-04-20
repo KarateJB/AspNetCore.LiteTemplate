@@ -1,8 +1,11 @@
 using application;
 using infrastructure;
+using webapi.Extensions;
 using webapi.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddCustomConfiguration(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -17,7 +20,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    builder.Configuration.AddUserSecrets<Program>(optional: true);
 }
 
 app.UseHttpsRedirection();
