@@ -27,7 +27,6 @@ dotnet new aspnetcore-lite [--name myapp]
 - **Feature flags** via `Microsoft.FeatureManagement`.
 - **OpenAPI/Swagger** enabled in development for API discovery and testing.
 - **NLog-based application and HTTP request logging** with a built-in action filter for request and response logs.
-- **MediatR and AutoMapper** prewired in the application layer for CQRS-style request handling and mapping.
 - **Dapper + Npgsql PostgreSQL data access** in the infrastructure layer as the sample repository implementation.
 - **Sample CRUD Members API** to use as a starting point for new endpoints and application flows.
 - **NUnit test project** included as a starting point for automated tests.
@@ -66,7 +65,10 @@ CREATE TABLE "Members"
 );
 ```
 
-2. Update the DB connection string in "appsettings.Development.json"
+2. Update the PostgreSQL DB connection string either by 
+  - Environment variable `postgres_dbconnection` in "src/webapi/Properties/launchSettings.json" 
+  - Use user secret, e.g.  `dotnet user-secrets set "ConnectionStrings:PgConnection" "Host=localhost;Port=5432;Database=demo;Username=user;Password=pwd;"`
+`
 
 
 
