@@ -1,11 +1,10 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
+using application.Mapping;
 using application.Features.Members.Commands;
 using application.Features.Members.Contracts;
 using application.Features.Members.Queries;
-using domain.Entities;
 using domain.ValueObjects;
 using shared.Configurations;
 
@@ -17,9 +16,9 @@ namespace webapi.Controllers;
 public class MembersController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
+    private readonly MemberMapper _mapper;
 
-    public MembersController(IMediator mediator, IMapper mapper)
+    public MembersController(IMediator mediator, MemberMapper mapper)
     {
         _mediator = mediator;
         _mapper = mapper;
@@ -28,7 +27,7 @@ public class MembersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateMemberRequest request, CancellationToken cancellationToken)
     {
-        var member = _mapper.Map<Member>(request);
+        var member = _mapper.MapForCreate(request);
         var id = await _mediator.Send(new CreateMemberCommand(member), cancellationToken);
         return CreatedAtAction(nameof(Find), new { id }, new { id });
     }
@@ -36,7 +35,7 @@ public class MembersController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateMemberRequest request, CancellationToken cancellationToken)
     {
-        var member = _mapper.Map<Member>(request);
+        var member = _mapper.MapForUpdate(request);
         member.Id = MemberId.From(id);
 
         var updated = await _mediator.Send(new UpdateMemberCommand(member), cancellationToken);
@@ -57,7 +56,7 @@ public class MembersController : ControllerBase
             return NotFound();
         }
 
-        var response = _mapper.Map<MemberResponse>(member);
+        var response = _mapper.MapToResponse(member);
         return Ok(response);
     }
 
