@@ -6,13 +6,13 @@ public class MemberResponse
 
     public string Name { get; set; } = string.Empty;
 
-    public DateTimeOffset Birthday { get; set; }
+    public string Birthday { get; set; } = string.Empty;
 
     public string Address { get; set; } = string.Empty;
 
     public string Phone { get; set; } = string.Empty;
 
-    public DateTimeOffset RegisterOn { get; set; }
+    public string RegisterOn { get; set; } = string.Empty;
 
     public bool IsEnabled { get; set; }
 }

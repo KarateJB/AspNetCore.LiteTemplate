@@ -17,7 +17,15 @@ try
     builder.Host.AddCustomConfiguration(args);
     builder.AddNLogLogging();
 
-    builder.Services.AddControllers(options => options.Filters.AddService<HttpRequestLogFilter>());
+    builder.Services.AddControllers(opts =>
+    {
+        opts.Filters.AddService<HttpRequestLogFilter>();
+    }).AddNewtonsoftJson(opts =>
+    {
+        opts.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+        opts.UseCamelCasing(true); // Use camelCase for JSON properties
+        // opts.UseMemberCasing(); // Use the original casing of the C# properties
+    });
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddInfrastructure(builder.Configuration);

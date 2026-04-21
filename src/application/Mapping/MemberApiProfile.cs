@@ -23,6 +23,8 @@ public class MemberApiProfile : Profile
 
         CreateMap<Member, MemberResponse>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
+            .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RegisterOn, opt => opt.MapFrom(src => src.RegisterOn.ToString("yyyy-MM-dd HH:mm:ss")))
             .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone.Value))
             .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address.Value));
     }

@@ -1,16 +1,19 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
 using application.Features.Members.Commands;
 using application.Features.Members.Contracts;
 using application.Features.Members.Queries;
-using AutoMapper;
 using domain.Entities;
 using domain.ValueObjects;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using shared.Configurations;
 
 namespace webapi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[FeatureGate(FeatureFlags.Member)]
 public class MembersController : ControllerBase
 {
     private readonly IMediator _mediator;
