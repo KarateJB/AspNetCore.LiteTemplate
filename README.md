@@ -21,38 +21,43 @@ dotnet new aspnetcore-lite [--name myapp]
 ---
 ## Features
 
-### Supports Environment variable Configuration
-
-Use double curly braces (e.g. `{{ variable }}`) in appsettings.*.json to inject the environment variable value into the configuration.
-In development, you can set the values in "src/webapi/Properties/launchSettings.json" or by user secret.
-
-### Clean Architecture
+- **Clean Architecture** with `webapi`, `application`, `infrastructure`, `domain`, `shared`, and `tests` projects.
+- **Environment-aware configuration** with `appsettings.json`, `appsettings.{Environment}.json`, environment variables, command-line arguments, and User Secrets in development.
+- **Environment variable templating in JSON config** by using double curly braces such as `{{ postgres_dbconnection }}` in `appsettings.*.json`.
+- **Feature flags** via `Microsoft.FeatureManagement`.
+- **OpenAPI/Swagger** enabled in development for API discovery and testing.
+- **NLog-based application and HTTP request logging** with a built-in action filter for request and response logs.
+- **MediatR and AutoMapper** prewired in the application layer for CQRS-style request handling and mapping.
+- **Dapper + Npgsql PostgreSQL data access** in the infrastructure layer as the sample repository implementation.
+- **Sample CRUD Members API** to use as a starting point for new endpoints and application flows.
+- **NUnit test project** included as a starting point for automated tests.
 
 Project dependencies:
 ```
-WebAPI (Presentation)
+**webapi** (presentation layer that exposes HTTP endpoints, configures middleware)
   ↓ (depends on)
-Application (Contracts: IMemberRepository, IMemberService)
+**application** (contains use cases, CQRS handlers, service contracts, and object mappings.)
   ↓ (depends on)
-Infrastructure (Implementations: MemberRepository)
+**infrastructure** (implements external concerns such as persistence and repository access.)
   ↓ (depends on)
-Domain (business entities, value objects, and domain logic)
-```
+**domain** (business entities, value objects, and domain logic)
 
+→ **shared** (shared cross-project types and configuration models used by multiple layers.)
+```
 
 ---
 ## Demo
 
 ### Prerequisite
 
-1. Create the table in PostgresSQL database.
+1. Create the table in PostgreSQL database.
 
 ```sql
 CREATE TABLE "Members"
 (
     "Id" UUID DEFAULT gen_random_uuid(),
     "Name" VARCHAR(50),
-    "Birthday" TIMESTAMPTZ,
+    "Birthday" DATE,
     "Address" VARCHAR(100),
     "Phone" VARCHAR(20),
     "RegisterOn" TIMESTAMPTZ,
@@ -74,15 +79,15 @@ Base URL: `https://localhost:5001`
 ```bash
 curl -X POST 'https://localhost:5001/api/Members' -k --include \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}'
+  -d '{"name":"Jane Doe","birthday":"1995-05-20","address":"123 Main St","phone":"555-0100","isEnabled":true}'
 ```
 
-To export the Memeber ID from the response:
+To export the Member ID from the response:
 
 ```bash
 export MEMBER_ID=$(curl -X POST 'https://localhost:5001/api/Members' -k --include \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq -r ".id")
+  -d '{"name":"Jane Doe","birthday":"1995-05-20","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq -r ".id")
 ```
 
 #### Update member
@@ -90,13 +95,13 @@ export MEMBER_ID=$(curl -X POST 'https://localhost:5001/api/Members' -k --includ
 ```bash
 curl -X PUT "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"456 Oak Ave","phone":"555-0101","isEnabled":true}'
+  -d '{"name":"Jane Doe","birthday":"1995-05-20","address":"456 Oak Ave","phone":"555-0101","isEnabled":true}'
 ```
 
 #### Find member
 
 ```bash
-curl "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
+curl "https://localhost:5001/api/Members/7f171575-23e6-4289-ba20-7719908b6f3f" -k --include
 ```
 
 #### Delete member

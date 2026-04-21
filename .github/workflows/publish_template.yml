@@ -4,7 +4,7 @@ on:
   # pull_request:
   push:
     branches:
-      - master-rc
+      - master
     tags:
       - "v*"
   workflow_dispatch:

@@ -3,6 +3,7 @@ using application.Interfaces;
 using Dapper;
 using domain.Entities;
 using domain.ValueObjects;
+using infrastructure.Repositories.Models;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using shared.Configurations;
@@ -87,11 +88,11 @@ WHERE ""Id"" = @Id;";
     {
         return new MemberDataModel
         {
-            Id = member.Id.Value,
+            Id = member.Id?.Value,
             Name = member.Name,
-            Birthday = member.Birthday,
-            Address = member.Address.Value,
-            Phone = member.Phone.Value,
+            Birthday = member.Birthday.ToDateTime(TimeOnly.MinValue),
+            Address = member.Address?.Value ?? string.Empty,
+            Phone = member.Phone?.Value ?? string.Empty,
             RegisterOn = member.RegisterOn,
             IsEnabled = member.IsEnabled
         };
@@ -103,25 +104,11 @@ WHERE ""Id"" = @Id;";
         {
             Id = MemberId.From(data.Id),
             Name = data.Name,
-            Birthday = data.Birthday,
+            Birthday = DateOnly.FromDateTime(data.Birthday),
             Address = new Address(data.Address),
             Phone = new Phone(data.Phone),
             RegisterOn = data.RegisterOn,
             IsEnabled = data.IsEnabled
         };
-    }
-
-    /// <summary>
-    /// Internal DTO used for Dapper mapping to database records.
-    /// </summary>
-    private class MemberDataModel
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTimeOffset Birthday { get; set; }
-        public string Address { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public DateTimeOffset RegisterOn { get; set; }
-        public bool IsEnabled { get; set; }
     }
 }
