@@ -20,7 +20,7 @@ public class MemberService : IMemberService
 
     public async Task<bool> UpdateAsync(Member member, CancellationToken cancellationToken = default)
     {
-        var existingMember = await _memberRepository.FindAsync(member.Id.Value, cancellationToken);
+        var existingMember = await _memberRepository.FindAsync(member.Id!.Value, cancellationToken);
         if (existingMember is null)
         {
             return false;

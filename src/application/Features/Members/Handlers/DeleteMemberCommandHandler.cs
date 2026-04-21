@@ -1,6 +1,6 @@
 using application.Features.Members.Commands;
 using application.Interfaces;
-using MediatR;
+using Mediator;
 
 namespace application.Features.Members.Handlers;
 
@@ -13,8 +13,8 @@ public class DeleteMemberCommandHandler : IRequestHandler<DeleteMemberCommand, b
         _memberService = memberService;
     }
 
-    public Task<bool> Handle(DeleteMemberCommand request, CancellationToken cancellationToken)
+    public async ValueTask<bool> Handle(DeleteMemberCommand request, CancellationToken cancellationToken)
     {
-        return _memberService.DeleteAsync(request.Id, cancellationToken);
+        return await _memberService.DeleteAsync(request.Id, cancellationToken);
     }
 }

@@ -1,5 +1,5 @@
 using domain.Entities;
-using MediatR;
+using Mediator;
 
 namespace application.Features.Members.Commands;
 

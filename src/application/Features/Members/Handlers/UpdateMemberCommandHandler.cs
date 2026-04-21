@@ -1,6 +1,6 @@
 using application.Features.Members.Commands;
 using application.Interfaces;
-using MediatR;
+using Mediator;
 
 namespace application.Features.Members.Handlers;
 
@@ -13,8 +13,8 @@ public class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCommand, b
         _memberService = memberService;
     }
 
-    public Task<bool> Handle(UpdateMemberCommand request, CancellationToken cancellationToken)
+    public async ValueTask<bool> Handle(UpdateMemberCommand request, CancellationToken cancellationToken)
     {
-        return _memberService.UpdateAsync(request.Member, cancellationToken);
+        return await _memberService.UpdateAsync(request.Member, cancellationToken);
     }
 }

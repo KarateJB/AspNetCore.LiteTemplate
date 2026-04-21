@@ -1,6 +1,6 @@
 using application.Features.Members.Commands;
 using application.Interfaces;
-using MediatR;
+using Mediator;
 
 namespace application.Features.Members.Handlers;
 
@@ -13,8 +13,8 @@ public class CreateMemberCommandHandler : IRequestHandler<CreateMemberCommand, G
         _memberService = memberService;
     }
 
-    public Task<Guid> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Guid> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
     {
-        return _memberService.CreateAsync(request.Member, cancellationToken);
+        return await _memberService.CreateAsync(request.Member, cancellationToken);
     }
 }
