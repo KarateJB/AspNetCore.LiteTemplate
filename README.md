@@ -19,8 +19,16 @@ dotnet new aspnetcore-lite [--name myapp]
 ```
 
 ---
-## Architecture
+## Features
 
+### Supports Environment variable Configuration
+
+Use double curly braces (e.g. `{{ variable }}`) in appsettings.*.json to inject the environment variable value into the configuration.
+In development, you can set the values in "src/webapi/Properties/launchSettings.json" or by user secret.
+
+### Clean Architecture
+
+Project dependencies:
 ```
 WebAPI (Presentation)
   ↓ (depends on)
@@ -66,7 +74,7 @@ Base URL: `https://localhost:5001`
 ```bash
 curl -X POST 'https://localhost:5001/api/Members' -k --include \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}' | tail -n1 | jq ""
+  -d '{"name":"Jane Doe","birthday":"1995-05-20T00:00:00+00:00","address":"123 Main St","phone":"555-0100","isEnabled":true}'
 ```
 
 To export the Memeber ID from the response:

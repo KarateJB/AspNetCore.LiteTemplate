@@ -1,8 +1,9 @@
-using infrastructure;
 using NLog;
-using webapi;
+using application;
+using infrastructure;
 using webapi.Extensions;
 using webapi.Filters;
+using webapi;
 
 var logger = LogManager.Setup()
     .LoadConfigurationFromFile("NLog.config", optional: true)
@@ -19,8 +20,9 @@ try
     builder.Services.AddControllers(options => options.Filters.AddService<HttpRequestLogFilter>());
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddApplication();
+    builder.Services.AddWebApi();
 
     var app = builder.Build();
 
@@ -28,7 +30,6 @@ try
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        builder.Configuration.AddUserSecrets<Program>(optional: true);
     }
 
     app.UseHttpsRedirection();

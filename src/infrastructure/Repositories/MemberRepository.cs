@@ -15,13 +15,14 @@ public class MemberRepository : IMemberRepository
 
     public MemberRepository(IOptions<AppSettings> appSettingsOptions)
     {
+        const string errorMsg = "Connection string 'PgConnection' is not configured.";
         AppSettings appSettings = appSettingsOptions.Value;
         _connectionString = appSettings.ConnectionStrings.PgConnection
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+            ?? throw new InvalidOperationException(errorMsg);
 
         if (string.IsNullOrWhiteSpace(_connectionString))
         {
-            throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+            throw new InvalidOperationException(errorMsg);
         }
     }
 

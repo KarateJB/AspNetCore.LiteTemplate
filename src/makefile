@@ -9,7 +9,7 @@ clean:
 restore:
 		dotnet restore ./app.sln
 
-build:
+build: restore
 		dotnet build ./app.sln --no-restore /clp:ErrorsOnly
 
 test:

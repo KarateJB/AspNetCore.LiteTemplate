@@ -48,17 +48,6 @@ public class MembersController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MemberResponse>> Find(Guid id, CancellationToken cancellationToken)
     {
-        // mock the response body
-        return Ok(new MemberResponse
-        {
-            Id = id,
-            Name = "Test",
-            Address = "Test",
-            Phone = "Test",
-            Birthday = new DateTime(2012, 3, 13),
-            RegisterOn = DateTime.Now
-        });
-
         var member = await _mediator.Send(new FindMemberQuery(id), cancellationToken);
         if (member is null)
         {
