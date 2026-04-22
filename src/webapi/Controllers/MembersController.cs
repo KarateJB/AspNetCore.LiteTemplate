@@ -15,18 +15,21 @@ namespace webapi.Controllers;
 [FeatureGate(FeatureFlags.Member)]
 public class MembersController : ControllerBase
 {
+    private readonly ILogger _logger;
     private readonly IMediator _mediator;
     private readonly MemberMapper _mapper;
 
-    public MembersController(IMediator mediator, MemberMapper mapper)
+    public MembersController(ILogger<MembersController> logger, IMediator mediator, MemberMapper mapper)
     {
-        _mediator = mediator;
-        _mapper = mapper;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateMemberRequest request, CancellationToken cancellationToken)
     {
+        // _logger.LogDebug("Creating member with data: {@Request}", request);
         var member = _mapper.MapForCreate(request);
         var id = await _mediator.Send(new CreateMemberCommand(member), cancellationToken);
         return CreatedAtAction(nameof(Find), new { id }, new { id });
@@ -35,6 +38,7 @@ public class MembersController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateMemberRequest request, CancellationToken cancellationToken)
     {
+        // _logger.LogDebug("Updating member with data: {@Request}", request);
         var member = _mapper.MapForUpdate(request);
         member.Id = MemberId.From(id);
 

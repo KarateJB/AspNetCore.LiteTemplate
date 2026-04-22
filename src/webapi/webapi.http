@@ -1,6 +1,35 @@
-@webapi_HostAddress = http://localhost:5257
+@webapi_HostAddress = https://localhost:5001
+@memberId = cb7026d1-9730-4a15-baca-aa7b9ac32dbf
 
-GET {{webapi_HostAddress}}/weatherforecast/
+### Create member
+POST {{webapi_HostAddress}}/api/Members
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "birthday": "1995-05-20",
+  "address": "123 Main St",
+  "phone": "555-0100",
+  "isEnabled": true
+}
+
+### Find member
+GET {{webapi_HostAddress}}/api/Members/{{memberId}}
 Accept: application/json
+
+### Update member
+PUT {{webapi_HostAddress}}/api/Members/{{memberId}}
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "birthday": "1995-05-20",
+  "address": "456 Oak Ave",
+  "phone": "555-0101",
+  "isEnabled": true
+}
+
+### Delete member
+DELETE {{webapi_HostAddress}}/api/Members/{{memberId}}
 
 ###

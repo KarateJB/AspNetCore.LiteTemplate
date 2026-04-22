@@ -50,8 +50,11 @@
         ".template.config/**",
         ".vs/**",
         ".vscode/**",
+        ".github/**",
         "**/*.user",
-        "**/*.suo"
+        "**/*.suo",
+        ".editorconfig",
+        "makefile"
       ]
     }
   ]

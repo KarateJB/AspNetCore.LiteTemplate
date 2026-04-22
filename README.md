@@ -1,6 +1,7 @@
 # asp.net core Lite Template
 
 Template identity details:
+- Default target framework: net10.0
 - Identity: `KarateJB.AspNetCore.LiteTemplate.CSharp`
 - Short name: `aspnetcore-lite`
 - nuget package: https://www.nuget.org/packages/KarateJB.AspNetCore.LiteTemplate
@@ -10,7 +11,7 @@ Template identity details:
 
 Install the dotnet template.
 ```bash
-dotnet new install KarateJB.AspNetCore.LiteTemplate
+dotnet new install KarateJB.AspNetCore.LiteTemplate [--force]
 ```
 
 Create a new project by
@@ -21,7 +22,7 @@ dotnet new aspnetcore-lite [--name myapp]
 ---
 ## Features
 
-- **Clean Architecture** with `webapi`, `application`, `infrastructure`, `domain`, `shared`, and `tests` projects.
+- **Clean Architecture**.
 - **Environment-aware configuration** with `appsettings.json`, `appsettings.{Environment}.json`, environment variables, command-line arguments, and User Secrets in development.
 - **Environment variable templating in JSON config** by using double curly braces such as `{{ postgres_dbconnection }}` in `appsettings.*.json`.
 - **Feature flags** via `Microsoft.FeatureManagement`.
@@ -67,9 +68,8 @@ CREATE TABLE "Members"
 
 2. Update the PostgreSQL DB connection string either by 
   - Environment variable `postgres_dbconnection` in "src/webapi/Properties/launchSettings.json" 
-  - Use user secret, e.g.  `dotnet user-secrets set "ConnectionStrings:PgConnection" "Host=localhost;Port=5432;Database=demo;Username=user;Password=pwd;"`
+  - Use user secret in webapi project, e.g.  `dotnet user-secrets set "ConnectionStrings:PgConnection" "Host=localhost;Port=5432;Database=demo;Username=user;Password=pwd;"`
 `
-
 
 
 ### Default API
@@ -103,7 +103,7 @@ curl -X PUT "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include \
 #### Find member
 
 ```bash
-curl "https://localhost:5001/api/Members/7f171575-23e6-4289-ba20-7719908b6f3f" -k --include
+curl "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
 ```
 
 #### Delete member
@@ -112,9 +112,10 @@ curl "https://localhost:5001/api/Members/7f171575-23e6-4289-ba20-7719908b6f3f" -
 curl -X DELETE "https://localhost:5001/api/Members/${MEMBER_ID}" -k --include
 ```
 
+
 ---
 ## Notes
 
 - This repository includes a workflow that will publish the template to nuget.org either when:
-  - Git push to `main` branch.
+  - Git push to `master` branch.
   - Push tag 'v*', e.g. `git tag v1.0.0 && git push origin v1.0.0`
