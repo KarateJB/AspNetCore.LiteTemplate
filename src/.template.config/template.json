@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "KarateJB",
+  "classifications": [
+    "WebAPI",
+    "Clean Architecture",
+    "ASP.NET Core"
+  ],
+  "identity": "KarateJB.AspNetCore.LiteTemplate.CSharp",
+  "groupIdentity": "KarateJB.AspNetCore.LiteTemplate",
+  "name": "ASP.NET Core Lite Template",
+  "shortName": "aspnetcore-lite",
+  "description": "ASP.NET Core Web API lite template in clean architecture.",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "app.sln"
+    }
+  ],
+  "symbols": {
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "If true, skips the automatic dotnet restore step."
+    }
+  },
+  "postActions": [
+    {
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this template.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ],
+  "sources": [
+    {
+      "exclude": [
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        ".template.config/**",
+        ".vs/**",
+        ".vscode/**",
+        ".github/**",
+        "**/*.user",
+        "**/*.suo",
+        ".editorconfig",
+        "makefile"
+      ]
+    }
+  ]
+}

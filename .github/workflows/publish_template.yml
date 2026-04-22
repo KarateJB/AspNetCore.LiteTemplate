@@ -1,0 +1,54 @@
+name: Publish Template
+
+on:
+  # pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack_and_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore solution
+        run: dotnet restore ./src/app.sln
+
+      - name: Build solution
+        run: dotnet build ./src/app.sln --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test ./src/tests/app.test/app.test.csproj --no-build --configuration Release
+
+      - name: Pack template
+        run: dotnet pack ./template-pack/AspNetCore.LiteTemplate.TemplatePack.csproj -c Release -o ./artifacts
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: template-nupkg
+          path: ./artifacts/*.nupkg
+
+      - name: Publish package to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "NUGET_API_KEY is not set."
+            exit 1
+          fi
+          dotnet nuget push ./artifacts/KarateJB.AspNetCore.LiteTemplate.*.nupkg -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
