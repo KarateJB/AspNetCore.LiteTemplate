@@ -14,8 +14,6 @@ public record Address
 
     private static string ValidateAndNormalize(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Address cannot be empty", nameof(value));
         if (value.Length > 100)
             throw new ArgumentException("Address cannot exceed 100 characters", nameof(value));
 

@@ -1,4 +1,4 @@
-# asp.net core Lite Template
+# ASP.NET Core Lite Template
 
 Template identity details:
 - Default target framework: net10.0
@@ -59,9 +59,9 @@ CREATE TABLE "Members"
     "Name" VARCHAR(50),
     "Birthday" DATE,
     "Address" VARCHAR(100),
-    "Phone" VARCHAR(20),
+    "Phone" VARCHAR(20) NOT NULL,
     "RegisterOn" TIMESTAMPTZ,
-    "IsEnabled" BOOLEAN DEFAULT TRUE,
+    "IsEnabled" BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT "PK_Folks" PRIMARY KEY ("Id")
 );
 ```
@@ -69,7 +69,6 @@ CREATE TABLE "Members"
 2. Update the PostgreSQL DB connection string either by 
   - Environment variable `postgres_dbconnection` in "src/webapi/Properties/launchSettings.json" 
   - Use user secret in webapi project, e.g.  `dotnet user-secrets set "ConnectionStrings:PgConnection" "Host=localhost;Port=5432;Database=demo;Username=user;Password=pwd;"`
-`
 
 
 ### Default API
